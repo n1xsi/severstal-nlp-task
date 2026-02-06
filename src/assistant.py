@@ -60,3 +60,58 @@ class DocumentAssistant:
         print(f"Вычисление эмбеддингов для {len(self.chunks)} фрагментов...")
         self.embeddings = self.encoder.encode(self.chunks, show_progress_bar=True)
         print("Индексация завершена.")
+
+    def _mock_llm_generation(self, prompt: str) -> str:
+        """
+        Имитация вызова LLM (GPT-4/GigaChat/Llama 3), так как это было разрешено в условиях задачи.
+        В реальном проекте здесь был бы HTTP запрос к API.
+        """
+        # ПРИМЕР ЗАПРОСА API К ИСПОЛЬЗОВАНИЮ OPENAI:
+        # response = openai.ChatCompletion.create(
+        #     model="gpt-4",
+        #     messages=[{"role": "user", "content": prompt}]
+        # )
+        # return response.choices[0].message.content
+
+        return (
+            "ОТВЕТ LLM (MOCK): На основе найденных фрагментов, документ содержит "
+            "информацию, релевантную вашему запросу. Пожалуйста, подключите реальную "
+            "модель (например, GPT-4 или Llama 3) в методе _mock_llm_response для "
+            "генерации связного текста."
+        )
+
+    def answer_query(self, query: str, top_k: int = 3) -> str:
+        """
+        Полный цикл RAG (Retrieval-Augmented Generation): Вопрос -> Вектор -> Поиск -> Промпт -> Ответ.
+        """
+        if not self.chunks or self.embeddings is None:
+            return "База знаний пуста. Сначала выполните index_documents."
+
+        # Векторизация запроса
+        query_vec = self.encoder.encode([query])
+
+        # Подсчет косинусного сходства (Dot product для нормализованных векторов)
+        # Форма: (1, N_chunks)
+        scores = cosine_similarity(query_vec, self.embeddings)[0]
+
+        # Поиск индексов топ-K лучших совпадений
+        # argsort сортирует по возрастанию, нужно взять последние K и перевернуть
+        top_k_indices = scores.argsort()[-top_k:][::-1]
+
+        # Извлечение текста из найденных фрагментов
+        retrieved_chunks = [self.chunks[i] for i in top_k_indices]
+
+        # Формирование промпта для LLM
+        context_str = "\n\n----------\n\n".join(retrieved_chunks)
+        prompt = (
+            f"Используй только следующие фрагменты документов для ответа:\n"
+            f"{context_str}\n\n"
+            f"Вопрос: {query}\n"
+            f"Ответ:"
+        )
+
+        # Отладка: вывод найденного контекста
+        # print(f"\n[DEBUG] Найден контекст для вопроса '{query}':")
+        # print(f"Найденные фрагменты:\n{context_str}\n")
+
+        return self._mock_llm_generation(prompt)
