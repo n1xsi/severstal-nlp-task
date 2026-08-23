@@ -10,7 +10,7 @@ def main():
 
     # Конфигурация путей
     files_to_process = [
-        "data/A9RD3D4.pdf",
+        "data/A9RD3D4.txt",
         "data/Polzovatelskoe_soglashenie.pdf",
         "data/University Success.docx"
     ]
