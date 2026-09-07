@@ -1,6 +1,6 @@
 <h1 align="center">
   
-  severstal-nlp-task
+  rag-document-assistant
 
   [![Python](https://custom-icon-badges.demolab.com/badge/Python-white?style=for-the-badge&logo=pythonn)](#)
   [![NumPy](https://img.shields.io/badge/numpy-white?style=for-the-badge&logo=numpy&logoColor=013243)](#)
@@ -27,8 +27,8 @@ python main.py
 В первый раз запуск программы будет скачиваться модель **all-MiniLM-L6-v2** (около 80 МБ). В конце работы в корне проекта будет создан файл `assistant_results.json`.
 
 ## Особенности
-* Извлечение текста из PDF/DOCX/TXT.
-* Семантический поиск с использованием косинусоидального сходства (`cosine_similarity`).
+* Извлечение текста из PDF/DOCX/TXT;
+* Семантический поиск с использованием косинусоидального сходства (`cosine_similarity`);
 * Настраиваемая стратегия разбиения на фрагменты.
 
 ## Status
